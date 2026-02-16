@@ -1,0 +1,74 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x' # Or specify a precise version, e.g., '3.19.0'
+          channel: 'stable'
+
+      - name: Display Flutter version
+        run: flutter --version
+
+      - name: Flutter Doctor
+        run: flutter doctor
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate launcher icons
+        run: flutter pub run flutter_launcher_icons:main
+
+      - name: Setup Android Signing
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=upload-keystore.jks" >> android/key.properties
+
+      - name: Patch on_audio_query_android build.gradle
+        run: |
+          PLUGIN_PATH="/home/runner/.pub-cache/hosted/pub.dev/on_audio_query_android-1.1.0/android/build.gradle"
+          if [ -f "$PLUGIN_PATH" ]; then
+            echo "Patching $PLUGIN_PATH"
+            # Inject namespace and JVM compatibility directly into the android block
+            # Using sed to add multiple lines after 'android {'
+            sed -i '/android {/a \    namespace "com.lucasjosino.on_audio_query"\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_1_8\n        targetCompatibility JavaVersion.VERSION_1_8\n    }\n    kotlinOptions {\n        jvmTarget = "1.8"\n    }' "$PLUGIN_PATH"
+            echo "Patch applied successfully."
+            head -n 25 "$PLUGIN_PATH"
+          else
+            echo "Warning: Plugin build.gradle not found at $PLUGIN_PATH"
+          fi
+
+      - name: Build Android Releases
+        run: |
+          flutter build apk --release
+          flutter build appbundle --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: build/app/outputs/bundle/release/app-release.aab
