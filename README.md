@@ -41,6 +41,12 @@ This project was developed with significant assistance from Artificial Intellige
 * Configuration files (Info.plist, Background Modes) are implemented.
 * Note: The iOS version is currently **untested** as development was performed without access to physical iOS hardware.
 
+## Supported Audio Formats
+HLA leverages native system decoders to support a wide range of audio formats:
+* **Standard:** MP3, AAC, WAV
+* **Lossless:** FLAC, ALAC (Apple Lossless)
+* **Other:** OGG, OPUS, M4A, AIFF
+
 ## Downloads
 
 ### Stable Releases
