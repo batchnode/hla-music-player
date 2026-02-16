@@ -16,6 +16,10 @@ HLA (Hyper Local Audio) is a high-performance, local-first music player designed
 - **Lossless:** FLAC, ALAC (Apple Lossless)
 - **Other:** OGG, OPUS, M4A, AIFF
 
+## Known Issues
+- **Collection Page Loading:** In certain scenarios, the dynamically generated collection list pages (which list individual songs) may fail to load content correctly while scrolling.
+- **Category Count Inconsistency:** Categorized views (Artists, Albums, Genres) may occasionally display an incorrect number of items or fail to refresh properly. This behavior is primarily observed after toggling "Restricted Mode" and is typically resolved by a full application restart.
+
 ## Technical Specifications
 - **Framework:** Flutter
 - **Target Platform:** Android (Fully Tested), iOS (Configuration Ready)

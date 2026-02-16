@@ -47,6 +47,10 @@ HLA leverages native system decoders to support a wide range of audio formats:
 * **Lossless:** FLAC, ALAC (Apple Lossless)
 * **Other:** OGG, OPUS, M4A, AIFF
 
+## Known Issues
+* **Collection Page Loading:** Dynamically generated collection lists may occasionally fail to populate songs during scroll events.
+* **Metadata Categorization:** Categorized counts (Artists, Albums, Genres) may become desynchronized, particularly when toggling Restricted Mode. A restart currently resolves this state.
+
 ## Downloads
 
 ### Stable Releases
