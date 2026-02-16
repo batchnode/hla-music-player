@@ -90,7 +90,7 @@ You can also access the latest automated builds through GitHub Actions:
 
 ### Installation
 1. Clone the repository:
-   git clone https://github.com/dodo/hla-music-player.git
+   `git clone https://github.com/dodo/hla-music-player.git`
 
 2. Navigate to the project directory:
    cd hla-music-player
